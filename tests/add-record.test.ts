@@ -21,5 +21,5 @@ test('Validates invalid price', () => {
     expect(() => new AddRecord({
         ...defaultObject,
         price: -3,
-    })).toThrow('Cena nie może być mniejsza niż 0 i większa niż 9 999 999 !')
+    })).toThrow('Cena nie może być mniejsza niż 0 i większa niż 9 999 999.00 !')
 });
