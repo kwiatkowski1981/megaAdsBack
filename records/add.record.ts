@@ -1,4 +1,4 @@
-import {AddEntity, NewAddEntity} from "../types";
+import {AddEntity, NewAddEntity, SimpleAddEntity} from "../types";
 import {ValidationError} from "../utils/errors";
 import {pool} from "../utils/db";
 import {FieldPacket} from "mysql2";
@@ -48,10 +48,29 @@ export class AddRecord implements AddEntity {
     }
 
     static async getOne(id: string): Promise<AddRecord | null> {
-        const [results] = await pool.execute("SELECT * FROM `adds` WHERE id = :id", {
+        const [results] = await pool.execute("SELECT * FROM `adds` WHERE `id` = :id", {
             id: id,
         }) as AddRecordResults;
         return results.length === 0 ? null : new AddRecord(results[0]);
     }
 
+    static async findAll(name: string): Promise<SimpleAddEntity[]> {
+        const [results] = await pool.execute("SELECT * FROM `adds` WHERE `name` LIKE :search ", {
+            search: `%${name}%`,
+        }) as AddRecordResults;
+
+        // wyświetlanie wszystkich informacji
+        console.log(results.map(result => new AddRecord(result)));
+
+        // wyświetlanie wybranych informacji
+        console.log(results.map(result => {
+            const {id, lat, lon} = result;
+            return {id, lat, lon}
+        }));
+
+        return results.map(result => {
+            const {id, lat, lon} = result;
+            return {id, lat, lon}
+        });
+    }
 }

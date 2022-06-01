@@ -11,3 +11,5 @@ export interface AddEntity {
     lat: number;
     lon: number;
 }
+
+export interface SimpleAddEntity extends Pick<AddEntity, 'id' | 'lat' | 'lon'> {}
