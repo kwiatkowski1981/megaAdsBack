@@ -2,6 +2,7 @@ import {AddEntity, NewAddEntity, SimpleAddEntity} from "../types";
 import {ValidationError} from "../utils/errors";
 import {pool} from "../utils/db";
 import {FieldPacket} from "mysql2";
+import {v4 as uuid} from 'uuid';
 
 type AddRecordResults = [AddEntity[], FieldPacket[]];
 
@@ -61,7 +62,6 @@ export class AddRecord implements AddEntity {
 
         // wyświetlanie wszystkich informacji
         console.log(results.map(result => new AddRecord(result)));
-
         // wyświetlanie wybranych informacji
         console.log(results.map(result => {
             const {id, lat, lon} = result;
@@ -73,4 +73,17 @@ export class AddRecord implements AddEntity {
             return {id, lat, lon}
         });
     }
+
+    async insert(): Promise<void> {
+        if (!this.id) {
+            this.id = uuid();
+        } else {
+            throw  new Error('Can\'t add something that has already been added!')
+        }
+
+        await pool.execute("INSERT INTO `adds`(`id`, `name`, `description`, `price`, `url`, `lat`, `lon`) VALUES(:id, :name, :description, :price, :url, :lat, :lon)", this);
+
+    }
+
+
 }
