@@ -74,5 +74,4 @@ test('AdRecord.insert inserts data into my database.', async () => {
     expect(foundAdd).toBeDefined();
     expect(foundAdd).not.toBeNull();
     expect(foundAdd.id).toBe(add.id);
-
 });
