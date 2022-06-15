@@ -4,6 +4,7 @@ import 'express-async-errors';
 import {handleError} from "./utils/errors";
 import rateLimit from 'express-rate-limit'
 import {adRouter} from "./routers/ad.router";
+import {config} from "./config/config";
 
 
 const app = express();
@@ -16,7 +17,7 @@ const PORT_BE = 3001;
 
 
 app.use(cors({
-    origin: `${PROTOCOL}${HOST_FE}:${PORT_FE}`
+    origin: config.corsOrigin,
 }));
 app.use(json());
 
