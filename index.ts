@@ -27,7 +27,7 @@ app.use(rateLimit({
 }));
 
 const router = Router();
-router.use('/ad', adRouter);
+router.use('/attach', adRouter);
 app.use('/api', router);
 
 app.use(handleError);
