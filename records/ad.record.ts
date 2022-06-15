@@ -1,12 +1,12 @@
-import {AddEntity, NewAddEntity, SimpleAddEntity} from "../types";
+import {AdEntity, NewAdEntity, SimpleAdEntity} from "../types";
 import {ValidationError} from "../utils/errors";
 import {pool} from "../utils/db";
 import {FieldPacket} from "mysql2";
 import {v4 as uuid} from 'uuid';
 
-type AddRecordResults = [AddEntity[], FieldPacket[]];
+type AdRecordResults = [AdEntity[], FieldPacket[]];
 
-export class AddRecord implements AddEntity {
+export class AdRecord implements AdEntity {
 
     public id: string;
     public name: string;
@@ -16,7 +16,7 @@ export class AddRecord implements AddEntity {
     public lat: number;
     public lon: number;
 
-    constructor(obj: NewAddEntity) {
+    constructor(obj: NewAdEntity) {
         if (!obj.name || obj.name.length > 100) {
             throw new ValidationError('Nazwa ogłoszenia nie może być pusta i przekraczać 100 znaków!');
         }
@@ -48,26 +48,17 @@ export class AddRecord implements AddEntity {
         this.lon = obj.lon;
     }
 
-    static async getOne(id: string): Promise<AddRecord | null> {
-        const [results] = await pool.execute("SELECT * FROM `adds` WHERE `id` = :id", {
-            id: id,
-        }) as AddRecordResults;
-        return results.length === 0 ? null : new AddRecord(results[0]);
+    static async getOne(id: string): Promise<AdRecord | null> {
+        const [results] = await pool.execute("SELECT * FROM `ads` WHERE `id` = :id", {
+            id,
+        }) as AdRecordResults;
+        return results.length === 0 ? null : new AdRecord(results[0]);
     }
 
-    static async findAll(name: string): Promise<SimpleAddEntity[]> {
-        const [results] = await pool.execute("SELECT * FROM `adds` WHERE `name` LIKE :search ", {
+    static async findAll(name: string): Promise<SimpleAdEntity[]> {
+        const [results] = await pool.execute("SELECT * FROM `ads` WHERE `name` LIKE :search ", {
             search: `%${name}%`,
-        }) as AddRecordResults;
-
-        // wyświetlanie wszystkich informacji
-        console.log(results.map(result => new AddRecord(result)));
-        // wyświetlanie wybranych informacji
-        console.log(results.map(result => {
-            const {id, lat, lon} = result;
-            return {id, lat, lon}
-        }));
-
+        }) as AdRecordResults;
         return results.map(result => {
             const {id, lat, lon} = result;
             return {id, lat, lon}
@@ -78,12 +69,9 @@ export class AddRecord implements AddEntity {
         if (!this.id) {
             this.id = uuid();
         } else {
-            throw  new Error('Can\'t add something that has already been added!')
+            throw  new Error('Cannot ad something that has already been added!')
         }
-
-        await pool.execute("INSERT INTO `adds`(`id`, `name`, `description`, `price`, `url`, `lat`, `lon`) VALUES(:id, :name, :description, :price, :url, :lat, :lon)", this);
-
+        await pool.execute("INSERT INTO ads (id, name, description, price, url, lat, lon) VALUES(:id, :name, :description, :price, :url, :lat, :lon)", this);
     }
-
 
 }

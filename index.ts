@@ -3,7 +3,7 @@ import cors from 'cors';
 import 'express-async-errors';
 import {handleError} from "./utils/errors";
 import rateLimit from 'express-rate-limit'
-import {addRouter} from "./routers/add.router";
+import {adRouter} from "./routers/ad.router";
 
 
 const app = express();
@@ -25,10 +25,10 @@ app.use(rateLimit({
     max: 100, // Limit each IP to 100 requests per `window` (here, per 15 minutes)
 }));
 
-app.use('/add', addRouter);
+app.use('/ad', adRouter);
 
 app.use(handleError);
 
-app.listen(PORT_BE, HOST_BE, ()=> {
+app.listen(PORT_BE, HOST_BE, () => {
     console.log(`Listening on: ${PROTOCOL}${HOST_FE}:${PORT_BE}`);
 });

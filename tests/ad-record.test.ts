@@ -1,4 +1,4 @@
-import {AddRecord} from "../records/add.record";
+import {AdRecord} from "../records/ad.record";
 
 const defaultObject = {
     name: 'Migros supermarket',
@@ -10,15 +10,15 @@ const defaultObject = {
 }
 
 
-test('Can create AddRecord', () => {
-    const add = new AddRecord(defaultObject);
+test('Can create AdRecord', () => {
+    const ad = new AdRecord(defaultObject);
 
-    expect(add.name).toBe('Migros supermarket');
-    expect(add.description).toBe('blah');
+    expect(ad.name).toBe('Migros supermarket');
+    expect(ad.description).toBe('blah');
 });
 
 test('Validates invalid price', () => {
-    expect(() => new AddRecord({
+    expect(() => new AdRecord({
         ...defaultObject,
         price: -3,
     })).toThrow('Cena nie może być mniejsza niż 0 i większa niż 9 999 999.00 !')
